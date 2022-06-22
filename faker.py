@@ -29,7 +29,7 @@ def age(count):
     return [str(randint(3,80)) for i in range(count)]
 
 def main():
-    if argv[1] == "--help":
+    if len(argv)>1 and argv[1] == "--help":
         print("""
         py faker.py <optional: filename>
 
@@ -47,7 +47,7 @@ def main():
     #template keywords: [first, last, full, age, phone, email, (number of rows)]
     #22 Unique names available
 
-    template = [first , last ,full, age, phone, email, 3]
+    template = [first , last ,full, age, phone, email, 22]
 
     n = min(template.pop(),22);
     ret= []
