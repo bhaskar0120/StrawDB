@@ -29,7 +29,7 @@ def age(count):
     return [str(randint(3,80)) for i in range(count)]
 
 def main():
-    if len(argv)>1 and argv[1] == "--help":
+    if len(argv) > 1 and argv[1] == "--help":
         print("""
         py faker.py <optional: filename>
 
