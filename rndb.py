@@ -13,7 +13,7 @@ def generate():
 
 
 n = 30
-if len(argv)>2:
+if len(argv) > 2:
     n = argv[2]
 
 for t in range(n):

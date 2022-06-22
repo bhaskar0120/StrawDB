@@ -13,9 +13,8 @@ def read(col, data, db):
     return db[lo]
 
 def main():
-    f = open("dtb.txt", 'r+')
-    _db = f.readlines()
-    _db = _db[0].split(',')
+    f = open(argv[1], 'r+')
+    _db = f.readlines()[0].split(',')
     db = []
     for i in range(int(len(_db)/3)):
         db.append([_db[3*i], _db[3*i+1], _db[3*i+2]])
