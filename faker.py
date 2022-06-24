@@ -83,7 +83,8 @@ def main():
     #template keywords: [first, last, full, age, phone, email, number, boolean (number of rows)]
 
     #template = [first , last ,full, age, phone, email, number,boolean, 29]
-    template = [age, age, age, 7]
+    # template = [age, age, age, 7]
+    template = [first, age, age, 100]
     limit = 5
 
 
@@ -93,10 +94,10 @@ def main():
     metadata = [len(template)]
     metadata += [types[i] for i in template]
     metadata.append(limit)
-    metadata.append(n%limit)
+    metadata.append(n)
 
 
-
+    print(metadata)
     ret= []
     down = [(i+1)%limit for i in range(limit)]
     up = [(i+4)%limit for i in range(limit)]
@@ -132,7 +133,9 @@ def main():
         else:
             ret.append(pointer)
 
+    
     if len(argv) < 2:
+    # if 1 > 0:
         for i in metadata:
             print(i,end=',')
         print()
@@ -146,7 +149,7 @@ def main():
             f.write(metadata)
             for i in range(n):
                 for j in range(len(ret)):
-                    f.write(ret[j][i]);
+                    f.write(ret[j][i])
 
 
 
