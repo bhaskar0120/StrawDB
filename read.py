@@ -40,13 +40,7 @@ def reconstruct(row, col):
     tableNumber = int(row/tableSize)
     for i in range(columnCount):
         curCol = (col + i)%columnCount
-        navigate(curRow,curCol)
-        data = unpack(specifiers[colTypes[curCol]-1], f.read(dataTypeSizes[colTypes[curCol]-1]))
-        if colTypes[curCol] == 4:
-            data = getStr(data)
-        else:
-            data = data[0]
-        res[curCol] = data
+        res[curCol] = get(curRow, curCol)
         next = unpack("i",f.read(4))[0]
         curRow = tableNumber*tableSize + next
     return res
@@ -106,4 +100,4 @@ rowCount = unpack("i", f.read(4))[0]
 for i in range(rowCount):
     printrow(i)
 
-print(find(0,"Anthony"))
+print(find(0,"Julian"))

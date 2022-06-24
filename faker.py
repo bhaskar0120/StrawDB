@@ -84,8 +84,8 @@ def main():
 
     #template = [first , last ,full, age, phone, email, number,boolean, 29]
     # template = [age, age, age, 7]
-    template = [first, age, age, 100]
-    limit = 5
+    template = [first, first, age, 104]
+    limit = 10
 
 
     types = {first:4, last:4, age:1, phone:4,email:4, full:4, number:2, boolean:3}
@@ -135,7 +135,6 @@ def main():
 
     
     if len(argv) < 2:
-    # if 1 > 0:
         for i in metadata:
             print(i,end=',')
         print()
