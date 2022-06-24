@@ -5,7 +5,7 @@ from sys import argv
 first_names = [ "Andrew", "Anthony", "Austin", "Benjamin", "Blake", "Boris", "Isaac", "Jack", "Jacob", "Jake", "James", "Jason", "Joe", "John", "Jonathan", "Joseph", "Joshua", "Julian", "Justin", "Keith", "Kevin", "Leonard"]
 
 last_names = [ "Bailey",  "Ball", "Bell", "Berry", "Black", "Blake", "Bond", "Bower", "Brown", "Buckland", "Burgess", "Butler", "Cameron", "Campbell", "Carr", "Chapman", "Churchill", "Clark", "Clarkson", "Coleman", "Cornish", "Davidsonk" ]
-limit = 5                           #### LIMIT IS HERE NOW
+limit = 5                      #### LIMIT IS HERE NOW
 
 def serial(count, File=False):
     t = list(range(count))
@@ -90,10 +90,10 @@ def main():
 
     #template keywords: [serial first, last, full, age, phone, email, number, boolean (number of rows)]
 
-    template = [serial, age, first,last, 7]
+    template = [serial, age, first, last, 10]
 
 
-    types = {serial:4, first:4, last:4, age:1, phone:4,email:4, full:4, number:2, boolean:3}
+    types = {serial:1, first:4, last:4, age:1, phone:4,email:4, full:4, number:2, boolean:3}
 
     n = template.pop()
     metadata = [len(template)]
@@ -145,7 +145,7 @@ def main():
         print()
         for i in range(n):
             for j in range(len(ret)):
-                print(str(ret[j][i]),end=",");
+                print(str(ret[j][i]),end=",")
             print()
     else:
         with open(argv[1],'wb') as f:

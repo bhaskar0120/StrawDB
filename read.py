@@ -1,5 +1,22 @@
+from importlib.metadata import entry_points
 from sys import argv
 from struct import unpack
+
+# supported commands:
+
+# find(column, required) 
+#     eg. find(1, "Anthony")
+#     returns all matches of key "Anthony" in column 1
+
+# reconstruct(row, col)
+#     reconstructs a particular row using one entry
+#     by following pointers
+
+# get(row, col)
+#     get the entry at row, col
+
+# printrow(k)
+#     print the kth row
 
 #global variables
 dataTypeSizes = [4, 16, 1, 140]
@@ -68,6 +85,10 @@ def find(col, req):
             res.append(reconstruct(base + lo, col))
     return res    
 
+def findRows(A, B):
+    # print all rows from A to B
+    pass
+
 def getStr(byt):
     return str(byt[0]).split("\\")[0][2:]
 
@@ -77,12 +98,14 @@ def printrow(row):
     res = ""
     for i in colTypes:
         data = unpack(specifiers[i-1], f.read(dataTypeSizes[i-1]))
-        f.seek(4,1)
         if i == 4:
             data = getStr(data)
         else:
             data = data[0]
         res += str(data)
+        res += ","
+        ptr = unpack("i", f.read(4))[0]
+        res += str(ptr)
         res += ","
     print(res)
 
@@ -97,7 +120,10 @@ for i in colTypes:
 tableSize = unpack("i", f.read(4))[0]
 rowCount = unpack("i", f.read(4))[0]
 
+print([columnCount, rowBytes, tableSize, rowCount])
+print(colTypes)
+# printrow(0)
 for i in range(rowCount):
     printrow(i)
 
-print(find(0,"Julian"))
+print(find(3,"Buckland"))
