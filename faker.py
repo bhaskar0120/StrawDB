@@ -17,28 +17,28 @@ def last(count,File=False):
     global last_names
     t =  choices(last_names, k=count)
     if File:
-        return [bytes("i{}".format("\x00"*(140-len(i))),'utf-8') for i in t]
+        return [bytes("{}{}".format(i,"\x00"*(140-len(i))),'utf-8') for i in t]
     return t
 
 def email(count,File=False):
     global last_names, first_names
     t =  [f"{i}.{j}@gmail.com" for i,j in zip(choices(first_names,k=count), choices(last_names,k=count))]
     if File:
-        return [bytes("i{}".format("\x00"*(140-len(i))),'utf-8') for i in t]
+        return [bytes("{}{}".format(i,"\x00"*(140-len(i))),'utf-8') for i in t]
     return t
 
 def full(count,File=False):
     global last_names, first_names
     t =  [f"{i} {j}" for i,j in  zip(choices(first_names,k=count), choices(last_names,k=count))]
     if File:
-        return [bytes("i{}".format("\x00"*(140-len(i))),'utf-8') for i in t]
+        return [bytes("{}{}".format(i,"\x00"*(140-len(i))),'utf-8') for i in t]
     return t
 
 def phone(count,File=False):
     l = [str(i) for i in range(10)]
     t =  [''.join(choices(l,k=10)) for i in range(count)]
     if File:
-        return [bytes("i{}".format("\x00"*(140-len(i))),'utf-8') for i in t]
+        return [bytes("{}{}".format(i,"\x00"*(140-len(i))),'utf-8') for i in t]
     return t
 
 def age(count,File=False):
@@ -83,7 +83,7 @@ def main():
     #template keywords: [first, last, full, age, phone, email, number, boolean (number of rows)]
 
     #template = [first , last ,full, age, phone, email, number,boolean, 29]
-    template = [age, age, age, 7]
+    template = [age, first,last, 7]
     limit = 5
 
 
