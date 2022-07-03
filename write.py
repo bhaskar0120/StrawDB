@@ -1,78 +1,91 @@
-'''
-Type code {   SUPPORTS ONLY THESE FOR NOW 
-    1 - int 
-    2 - float 
-    3 - bool
-    4 - str
-}
+from struct import pack
+from main import Table
 
-metadata structure
-[NUMBER_OF_COL, TYPE_CODE_1, TYPE_CODE_2, ..., TYPE_CODE_N, LIMIT, CURRENT_ENTRY_IN_NEW_TABLE]
-'''
+type_ref_table = { 1:"i", 2:"f", 3:"?" }
+size_table = { 1:4, 2:4, 3:1, 4:140 }
 
-def createDB(table,metadata):
-    with open (table["name"], 'w') as f:
-        f.write(','.join([str(i) for i in metadata]))
+def strFill(text):
+    if len(text) > 140:
+        text = text[:140]
+        return text
+    return ''.join([text,'\x00'*(140-len(text))])
+
+def createDB(table):
+    names = []
+    for val in table.col_names.keys():
+        names.append(strFill(val))
+    with open (table.name, 'wb') as f:
+        f.write(pack(f"{len(table.metadata)}i",*table.metadata))
+        for i in names:
+            f.write(bytes(i,'utf-8'))
 
 
-def writeDB(table, metadata, row):
-    limit = metadata[-2] 
-    with open(table["name"],'a+') as f:
-        f.write(',')
-        f.write(f',{limit},'.join(row))
-        f.write(f',{limit}')
+def writeDB(table, row):
+    limit = table.metadata[-2] 
+    col = table.metadata[0]
 
-    if metadata[-1] + 1 == limit:
-        with open(table["name"],'r+b') as f:
-            # This code will be optimized in byte mode
-            # a,lim,b,lim,c,lim,
-            # a,lim,b,lim,c,lim,
-            # a,lim,b,lim,c,lim,
-            # a,lim,b,lim,c,lim,
-            # a,lim,b,lim,c,lim
-            f.seek(-1,2)
-            comma = 0
-            comma_lit = bytes(',', 'ascii')
-            while comma < limit*(metadata[0])*2:
-                if f.read(1) == comma_lit: comma += 1
-                f.seek(-2,1)
-            f.seek(2,1)
-            pos = f.tell()
-            buffer = f.read().decode('ascii')
-            tokens = list(filter(None,buffer.split(',')))
-            last_table = [list() for i in range(metadata[0])]
-            index = 0
+    row_bytes = []
+    for i,val in enumerate(row):
+        if table.metadata[i+1] == 4:
+            row_bytes.append(bytes(strFill(val),'utf-8'))
+        else:
+            row_bytes.append( pack(type_ref_table[ table.metadata[i+1] ], val) )
+
+    with open(table.name, 'ab') as f:
+        for i in row_bytes:
+            f.write(i)
+            f.write( pack( 'i',table.metadata[-1]%limit ) )
+
+    table.metadata[-1]+=1
+    to_curr = (len(table.metadata)-1 ) *4
+    with open(table.name,'r+b') as f:
+        f.seek(to_curr)
+        f.write(pack('i',table.metadata[-1]))
+    
+    if table.metadata[-1]%limit == 0:
+        row_size = 0
+        for i in range(col):
+            row_size += size_table[table.metadata[i+1]] + 4
+        with open(table.name,'r+b') as f:
+            f.seek(-row_size*limit,2)
+            tb = [list() for i in range(col)]
+            switch = [[-1]*col for i in range(limit)]
             for i in range(limit):
-                for j in range(metadata[0]):
-                    last_table[j].append((tokens[index],i))
-                    index+=2
-            print(last_table)
-            for i in range(metadata[0]):
-                last_table[i].sort()
-
-            f.seek(pos-1,0)
+                for j in range(col):
+                    readdata = f.read(size_table[table.metadata[j+1]])
+                    tb[j].append((readdata, i))
+                    f.seek(4,1)
+            for i in range(col):
+                tb[i].sort()
+            for i in range(col):
+                for j in range(limit):
+                    switch[tb[i][j][1]][i] = j
+            f.seek(-row_size*limit,2)
             for i in range(limit):
-                for j in range(metadata[0]):
-                    f.write(bytes(f",{last_table[j][i][0]},{last_table[j][i][1]}", "ascii"));
-
-
-
-
+                for j in range(col):
+                    f.write(tb[j][i][0])
+                    next_p = switch[tb[j][i][1]][(j+1)%col]
+                    f.write(pack('i',next_p))
 
 
 
 if __name__ == "__main__":
-    data = [ "Joseph","Campbell","Isaac" "Buckland","71","2161947558","Austin.Clark@gmail.com"] 
-    table = {'name':'fake.txt'}
-    metadata= [6,4,4,4,1,4,4,2,0,]
-    createDB(table,metadata)
-    writeDB(table,metadata,data)
-    # print(table)
-    data = [ "Boseph","Campbell","Isaac" "Buckland","71","2161947558","Austin.Clark@gmail.com"] 
-    metadata= [6,4,4,4,1,4,4,3,1,]
-    writeDB(table,metadata,data)
-    # print(table)
-    data = [ "Joseph","Campbell","Isaac" "Buckland","71","2161947558","Austin.Clark@gmail.com"] 
-    metadata= [6,4,4,4,1,4,4,3,2,]
-    writeDB(table,metadata,data)
-    # print(table)
+    table = Table()
+    table.name = 'fake.txt'
+    table.metadata = [3,1,1,4,5,0]
+    table.col_names = {"Age":0,"Age2":1, "Name":2}
+    
+    createDB(table)
+    writeDB(table, [14,5,"Elpha"])
+    writeDB(table, [12,4,"Dlpha"])
+    writeDB(table, [11,3,"Clpha"])
+    writeDB(table, [13,2,"Blpha"])
+    writeDB(table, [10,1,"Alpha"])
+
+    print('''
+    [14,5,"Elpha"]
+    [12,4,"Dlpha"]
+    [11,3,"Clpha"]
+    [13,2,"Blpha"]
+    [10,1,"Alpha"]
+    ''')

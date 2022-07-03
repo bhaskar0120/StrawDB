@@ -5,6 +5,13 @@ from sys import argv
 first_names = [ "Andrew", "Anthony", "Austin", "Benjamin", "Blake", "Boris", "Isaac", "Jack", "Jacob", "Jake", "James", "Jason", "Joe", "John", "Jonathan", "Joseph", "Joshua", "Julian", "Justin", "Keith", "Kevin", "Leonard"]
 
 last_names = [ "Bailey",  "Ball", "Bell", "Berry", "Black", "Blake", "Bond", "Bower", "Brown", "Buckland", "Burgess", "Butler", "Cameron", "Campbell", "Carr", "Chapman", "Churchill", "Clark", "Clarkson", "Coleman", "Cornish", "Davidsonk" ]
+limit = 5                           #### LIMIT IS HERE NOW
+
+def serial(count, File=False):
+    t = list(range(count))
+    if File:
+        return [pack('i',i) for i in t]
+    return t
 
 def first(count,File=False):
     global first_names
@@ -17,28 +24,28 @@ def last(count,File=False):
     global last_names
     t =  choices(last_names, k=count)
     if File:
-        return [bytes("i{}".format("\x00"*(140-len(i))),'utf-8') for i in t]
+        return [bytes("{}{}".format(i,"\x00"*(140-len(i))),'utf-8') for i in t]
     return t
 
 def email(count,File=False):
     global last_names, first_names
     t =  [f"{i}.{j}@gmail.com" for i,j in zip(choices(first_names,k=count), choices(last_names,k=count))]
     if File:
-        return [bytes("i{}".format("\x00"*(140-len(i))),'utf-8') for i in t]
+        return [bytes("{}{}".format(i,"\x00"*(140-len(i))),'utf-8') for i in t]
     return t
 
 def full(count,File=False):
     global last_names, first_names
     t =  [f"{i} {j}" for i,j in  zip(choices(first_names,k=count), choices(last_names,k=count))]
     if File:
-        return [bytes("i{}".format("\x00"*(140-len(i))),'utf-8') for i in t]
+        return [bytes("{}{}".format(i,"\x00"*(140-len(i))),'utf-8') for i in t]
     return t
 
 def phone(count,File=False):
     l = [str(i) for i in range(10)]
     t =  [''.join(choices(l,k=10)) for i in range(count)]
     if File:
-        return [bytes("i{}".format("\x00"*(140-len(i))),'utf-8') for i in t]
+        return [bytes("{}{}".format(i,"\x00"*(140-len(i))),'utf-8') for i in t]
     return t
 
 def age(count,File=False):
@@ -63,6 +70,7 @@ def boolean(count,File=False):
     return t
 
 def main():
+    global limit
     if len(argv) > 1 and argv[1] == "--help":
         print("""
         py faker.py <optional: filename>
@@ -70,7 +78,7 @@ def main():
         Edit the variable name `template` in the file according to the template
         You can change the template in any way you like 
 
-        #template keywords: [first, last, full, age, phone, email, number, boolean, (number of rows)]
+        #template keywords: [serial, first, last, full, age, phone, email, number, boolean, (number of rows)]
         
         """)
         return
@@ -80,20 +88,18 @@ def main():
 
 
 
-    #template keywords: [first, last, full, age, phone, email, number, boolean (number of rows)]
+    #template keywords: [serial first, last, full, age, phone, email, number, boolean (number of rows)]
 
-    #template = [first , last ,full, age, phone, email, number,boolean, 29]
-    template = [age, age, age, 7]
-    limit = 5
+    template = [serial, age, first,last, 7]
 
 
-    types = {first:4, last:4, age:1, phone:4,email:4, full:4, number:2, boolean:3}
-    formatter = {first:'s', last:4, age:1, phone:4,email:4, full:4, number:2, boolean:3}
+    types = {serial:4, first:4, last:4, age:1, phone:4,email:4, full:4, number:2, boolean:3}
+
     n = template.pop()
     metadata = [len(template)]
     metadata += [types[i] for i in template]
     metadata.append(limit)
-    metadata.append(n%limit)
+    metadata.append(n)
 
 
     print(metadata)
