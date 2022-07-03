@@ -67,9 +67,12 @@ if __name__ == "__main__":
     metadata= [6,4,4,4,1,4,4,2,0,]
     createDB(table,metadata)
     writeDB(table,metadata,data)
+    # print(table)
     data = [ "Boseph","Campbell","Isaac" "Buckland","71","2161947558","Austin.Clark@gmail.com"] 
     metadata= [6,4,4,4,1,4,4,3,1,]
     writeDB(table,metadata,data)
+    # print(table)
     data = [ "Joseph","Campbell","Isaac" "Buckland","71","2161947558","Austin.Clark@gmail.com"] 
     metadata= [6,4,4,4,1,4,4,3,2,]
     writeDB(table,metadata,data)
+    # print(table)

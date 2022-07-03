@@ -5,7 +5,6 @@ from sys import argv
 db = [['ani', '20', 'BHU'], ['bob', '23', 'GOOGLE'], ['alice', '19', 'STANFORD'], ['rohan', '21', 'IITKGP'], ['raj', '22', 'DELOIT'], ['yash', '26', 'BHU'], ['devansh', '22', 'BHU']]
 
 def generate():
-    data = []
     name = ''.join(random.choices(string.ascii_lowercase, k = 3 + int(10*random.random())))
     age = 16 + int(20*random.random())
     org = ''.join(random.choices(string.ascii_uppercase, k = 3 + int(10*random.random())))

@@ -96,7 +96,7 @@ def main():
     metadata.append(n%limit)
 
 
-
+    print(metadata)
     ret= []
     down = [(i+1)%limit for i in range(limit)]
     up = [(i+4)%limit for i in range(limit)]
