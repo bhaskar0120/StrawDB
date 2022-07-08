@@ -4,25 +4,19 @@ from struct import pack, unpack
 # todo:
 # implement UB, LB: [1, 2, 2, 3, 4]
 # query [datap1 datap2]
-# 
-
-# global variables
-dataTypeSizes = [4, 4, 1, 140]
-specifiers = ["i", "f", "?", "140s"]
-# global variables
 
 # table object
 class tableObj:
     def __init__(self, table):
-        self.dataTypeSizes = dataTypeSizes
-        self.specifiers = specifiers
+        self.dataTypeSizes = [4, 4, 1, 140]
+        self.specifiers = ["i", "f", "?", "140s"]
         self.f = open(table,'rb+')
         self.columnCount = unpack("i", self.f.read(4))[0]
         self.metaDataBytes = 4 + self.columnCount*4 + 4 + 4
         self.colTypes = unpack(f"{self.columnCount}i",self.f.read(self.columnCount*4))
         self.rowBytes = self.columnCount*4
         for i in self.colTypes:
-            self.rowBytes += dataTypeSizes[i-1]
+            self.rowBytes += self.dataTypeSizes[i-1]
         self.tableSize = unpack("i", self.f.read(4))[0]
         self.rowCount = unpack("i", self.f.read(4))[0]
         
@@ -46,7 +40,7 @@ def navigate(db, row, col):
 def get(db, row, col):
     # get value at row, col of given table object
     navigate(db, row, col)
-    data = unpack(specifiers[db.colTypes[col]-1], db.f.read(dataTypeSizes[db.colTypes[col]-1]))
+    data = unpack(db.specifiers[db.colTypes[col]-1], db.f.read(db.dataTypeSizes[db.colTypes[col]-1]))
     if db.colTypes[col] == 4:
         data = getStr(data)
     else:
@@ -68,11 +62,23 @@ def reconstruct(db, row, col):
 # helper functions
 
 
-def upperbound(db, col, req):
-    pass
+def upperbound(db, lo, hi, col, req):
+    while hi>lo:
+        mid=int((hi+lo)/2)
+        if mid<db.rowCount and get(db,mid,col)<=req:
+            lo=mid+1
+        else:
+            hi=mid
+    return lo
 
-def lowerbound(db, col, req):
-    pass
+def lowerbound(db, lo, hi, col, req):
+    while hi>lo:
+        mid=int((hi+lo)/2)
+        if mid<db.rowCount and get(db,mid,col)<req:
+            lo=mid+1
+        else:
+            hi=mid
+    return lo
 
 def find(db, col, req):
     # db: tableObj
@@ -81,16 +87,14 @@ def find(db, col, req):
     res = []
     for t in range(int(db.rowCount/db.tableSize)):
         base = t*db.tableSize
-        hi = db.tableSize-1
-        lo = 0
-        while hi>lo:
-            mid = int((hi+lo)/2)
-            if get(db,base + mid,col) < req:
-                lo = mid + 1
-            else:
-                hi = mid
-        if get(db, base + lo,col) == req:
-            res.append(reconstruct(db, base + lo, col))
+        hi = db.tableSize-1+base
+        lo = base
+        lb = lowerbound(db, lo, hi, col, req)
+        ub = upperbound(db, lo, hi, col, req)
+        if lb<db.rowCount and get(db,lb,col) == req:
+            for j in range(lb, ub):
+                res.append(reconstruct(db,j,col))
+    
     for t in range(db.rowCount%db.tableSize):
         r = int(db.rowCount/db.tableSize)*db.tableSize + t
         if get(db, r, col) == req:
@@ -115,7 +119,7 @@ class __test:
 def main():
     tb=__test()
     tb.name="cdb"
-    print(read(tb, 2, "Jacob"))
+    print(read(tb, 2, "Julian"))
     pass
 
 if __name__ == "__main__":
