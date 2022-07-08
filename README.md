@@ -33,3 +33,25 @@ COL1, POINTER, COL2, POINTER , ... , COLN, POINTER,
                     .
 COL1, POINTER, COL2, POINTER , ... , COLN, POINTER, 
 ```
+
+
+### Query Format
+```
+load `table_name`
+  get row 12              // Maybe can add get col?
+  get row 12..18
+  find `column` = `element` and `column2` = `element2` ... 
+end
+```
+
+### Keywords
+- **load: ** Loads the table for queries
+- **end: ** Clears the cache for the loaded table
+- **get: ** Get's the entire row or list of rows
+- **row: ** specifier to the get command
+- **find: ** finds rows that matches the query
+
+#### ToDo
+- [ ] col command _(to get a column or list of columns)_
+- [ ] as command _(to store the output of query as varaible)_
+
