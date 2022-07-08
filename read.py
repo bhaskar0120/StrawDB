@@ -106,11 +106,15 @@ def read(givenTable, col, data):
     #     self.name = ""
     #     self.col_names = {}
     #     self.metadata = []
-    db = tableObj(givenTable)
+    db = tableObj(givenTable.name)
     return find(db, col, data)
 
+class __test:
+    pass
+
 def main():
-    tb="cdb"
+    tb=__test()
+    tb.name="cdb"
     print(read(tb, 2, "Jacob"))
     pass
 
