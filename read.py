@@ -1,6 +1,11 @@
 from sys import argv
 from struct import pack, unpack
 
+# todo:
+# implement UB, LB: [1, 2, 2, 3, 4]
+# query [datap1 datap2]
+# 
+
 # global variables
 dataTypeSizes = [4, 4, 1, 140]
 specifiers = ["i", "f", "?", "140s"]
@@ -9,13 +14,15 @@ specifiers = ["i", "f", "?", "140s"]
 # table object
 class tableObj:
     def __init__(self, table):
+        self.dataTypeSizes = dataTypeSizes
+        self.specifiers = specifiers
         self.f = open(table,'rb+')
         self.columnCount = unpack("i", self.f.read(4))[0]
         self.metaDataBytes = 4 + self.columnCount*4 + 4 + 4
         self.colTypes = unpack(f"{self.columnCount}i",self.f.read(self.columnCount*4))
         self.rowBytes = self.columnCount*4
         for i in self.colTypes:
-            rowBytes += self.dataTypeSizes[i-1]
+            self.rowBytes += dataTypeSizes[i-1]
         self.tableSize = unpack("i", self.f.read(4))[0]
         self.rowCount = unpack("i", self.f.read(4))[0]
         
@@ -61,6 +68,11 @@ def reconstruct(db, row, col):
 # helper functions
 
 
+def upperbound(db, col, req):
+    pass
+
+def lowerbound(db, col, req):
+    pass
 
 def find(db, col, req):
     # db: tableObj
@@ -73,7 +85,7 @@ def find(db, col, req):
         lo = 0
         while hi>lo:
             mid = int((hi+lo)/2)
-            if get(base + mid,col) < req:
+            if get(db,base + mid,col) < req:
                 lo = mid + 1
             else:
                 hi = mid
@@ -94,10 +106,12 @@ def read(givenTable, col, data):
     #     self.name = ""
     #     self.col_names = {}
     #     self.metadata = []
-    db = tableObj(givenTable.name)
+    db = tableObj(givenTable)
     return find(db, col, data)
 
 def main():
+    tb="cdb"
+    print(read(tb, 2, "Jacob"))
     pass
 
 if __name__ == "__main__":
