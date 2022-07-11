@@ -1,5 +1,5 @@
 from sys import argv
-from struct import pack, unpack
+from struct import unpack
 
 # todo:
 # implement UB, LB: [1, 2, 2, 3, 4]
@@ -31,7 +31,7 @@ def getStr(byt):
 def navigate(db, row, col):
     # navigate cursor to row, col in binary file 
     # of given table object
-    position = db.metaDataBytes + db.rowBytes*row
+    position = db.metaDataBytes + db.rowBytes*row + 140*db.columnCount
     db.f.seek(position)
     for i in range(col):
         db.f.seek(db.dataTypeSizes[db.colTypes[i]-1],1)
@@ -118,8 +118,9 @@ class __test:
 
 def main():
     tb=__test()
-    tb.name="cdb"
-    print(read(tb, 2, "Julian"))
+    tb.name="fake.txt"
+    print(read(tb, 0, 10))
+    print(read(tb,2,"Blpha"))
     pass
 
 if __name__ == "__main__":
