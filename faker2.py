@@ -5,16 +5,6 @@ from random import random
 first_names = [ "Andrew", "Anthony", "Austin", "Benjamin", "Blake", "Boris", "Isaac", "Jack", "Jacob", "Jake", "James", "Jason", "Joe", "John", "Jonathan", "Joseph", "Joshua", "Julian", "Justin", "Keith", "Kevin", "Leonard"]
 last_names = [ "Bailey",  "Ball", "Bell", "Berry", "Black", "Blake", "Bond", "Bower", "Brown", "Buckland", "Burgess", "Butler", "Cameron", "Campbell", "Carr", "Chapman", "Churchill", "Clark", "Clarkson", "Coleman", "Cornish", "Davidsonk" ]
 
-def serial():
-    pass
-def phone():
-    pass
-def email():
-    pass
-def boolean():
-    pass
-def number():
-    pass
 def first():
     return first_names[int(random()*len(first_names))]
 
@@ -23,6 +13,25 @@ def last():
 
 def age():
     return int(100*random())
+
+def phone():
+    d=""
+    for i in range(10):
+        d+=str(int(random()*10))
+    return d
+
+def serial(rowCount):
+    return rowCount
+
+def email():
+    return phone()+".@gmail.com"
+
+def boolean():
+    return int(random()*2)
+
+def number():
+    return random()
+
 
 types = {serial:1, first:4, last:4, age:1, phone:4,email:4, number:2, boolean:3}
 colNames = {serial:"serial", first:"first", last:"last", age:"age", phone:"phone",email:"email", number:"number", boolean:"boolean"}
