@@ -118,10 +118,43 @@ class __test:
 
 def main():
     tb=__test()
-    tb.name="fake.txt"
+    tb.name="dsgkdshd"
     print(read(tb, 0, 10))
-    print(read(tb,2,"Blpha"))
+    print(read(tb, 1,"James"))
+    print(read(tb, 2, "Clarkson"))
     pass
 
 if __name__ == "__main__":
     main()
+    
+# [0, 'Austin', 'Clarkson', 80]
+# [1, 'Jason', 'Bond', 61]
+# [2, 'Jonathan', 'Ball', 63]
+# [3, 'Leonard', 'Clarkson', 31]
+# [4, 'Jacob', 'Burgess', 36]
+# [5, 'John', 'Cornish', 88]
+# [6, 'Kevin', 'Black', 39]
+# [7, 'Julian', 'Davidsonk', 54]
+# [8, 'Kevin', 'Campbell', 26]
+# [9, 'James', 'Ball', 42]
+# [10, 'James', 'Buckland', 65]
+# [11, 'Joshua', 'Churchill', 16]
+# [12, 'Jack', 'Blake', 83]
+# [13, 'Joshua', 'Bond', 44]
+# [14, 'James', 'Buckland', 99]
+# [15, 'Austin', 'Butler', 49]
+# [16, 'Andrew', 'Bell', 39]
+# [17, 'Jake', 'Cornish', 2]
+# [18, 'Jonathan', 'Chapman', 18]
+# [19, 'Justin', 'Churchill', 75]
+# [20, 'Keith', 'Blake', 40]
+# [21, 'John', 'Bond', 28]
+# [22, 'Jack', 'Clarkson', 78]
+# [23, 'Joseph', 'Black', 85]
+# [24, 'Jacob', 'Churchill', 2]
+# [25, 'Joe', 'Bell', 41]
+# [26, 'Kevin', 'Black', 7]
+# [27, 'Benjamin', 'Cornish', 85]
+# [28, 'Andrew', 'Campbell', 12]
+# [29, 'Joseph', 'Buckland', 66]
+# [4, 1, 4, 4, 1, 7, 30]
